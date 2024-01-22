@@ -4,7 +4,7 @@ import 'package:test_s/constants/my_colors.dart';
 import '../../data/models/characters.dart';
 
 class CharacterItem extends StatelessWidget {
-  final Results character;
+  final Results? character;
 
   const CharacterItem({super.key, required this.character});
 
@@ -23,10 +23,10 @@ class CharacterItem extends StatelessWidget {
           width: double.infinity,
           height: double.infinity,
           color: MyColors.myGrey,
-          child: character.image!.isEmpty
+          child: character!.image!.isNotEmpty
               ? FadeInImage.assetNetwork(
                   placeholder: 'assets/images/loading.gif',
-                  image: character.image!,
+                  image: character!.image!,
                   fit: BoxFit.cover,
                 )
               : Image.asset('assets/images/placeholder.jpeg'),
@@ -40,7 +40,7 @@ class CharacterItem extends StatelessWidget {
           color: Colors.black54,
           alignment: Alignment.bottomCenter,
           child: Text(
-            "${character.name},",
+            "${character?.name},",
             style: TextStyle(
               fontSize: 16,
               height: 1.3,

@@ -8,11 +8,9 @@ class CharactersRepository {
     required this.characterWebServices,
   });
 
-  Future<List<Results>> getAllCharacters() async {
+  Future<CharacterModel> getAllCharacters() async {
     final characters = await characterWebServices.getAllCharacters();
 
-    return characters
-        .map<Results>((character) => Results.fromJson(character))
-        .toList();
+    return characters;
   }
 }

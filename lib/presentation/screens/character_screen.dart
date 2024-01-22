@@ -4,6 +4,8 @@ import 'package:test_s/business_logic/cubit/characters_cubit.dart';
 import 'package:test_s/constants/my_colors.dart';
 import 'package:test_s/presentation/widgets/character_item.dart';
 
+import '../../data/models/characters.dart';
+
 class CharacterScreen extends StatefulWidget {
   const CharacterScreen({super.key});
 
@@ -12,13 +14,43 @@ class CharacterScreen extends StatefulWidget {
 }
 
 class _CharacterScreenState extends State<CharacterScreen> {
-  var allCharacters = [];
+  CharacterModel? allCharacters = CharacterModel();
+  // late List<CharacterModel> searchForCharacter;
+  // late List<CharacterModel> searchForCharacter = allCharacters!.toList;
+  // bool isSearching = false;
+
+  // Widget _buildSearchField() {
+  //   return TextField(
+  //     controller: _searchTextController,
+  //     cursorColor: MyColors.myGrey,
+  //     decoration: InputDecoration(
+  //       hintText: 'Find a Character ...',
+  //       border: InputBorder.none,
+  //       hintStyle: TextStyle(fontSize: 18, color: MyColors.myGrey),
+  //     ),
+  //     style: TextStyle(color: MyColors.myGrey, fontSize: 18),
+  //     onChanged: (searcedCharacter) {
+  //       addSearchedForitemsToSearchedList(searcedCharacter);
+  //     },
+  //   );
+  // }
+
+  // void addSearchedForitemsToSearchedList() {
+  //   searchForCharacter = allCharacters?.where((character) =>
+  //       character.name.toLowerCase().startWith(searchForCharacter)).toList();
+  // }
+
+  final _searchTextController = TextEditingController();
+  initCall() async {
+    allCharacters =
+        await BlocProvider.of<CharactersCubit>(context).getAllCharacters();
+  }
 
   @override
   void initState() {
     super.initState();
-    allCharacters =
-        BlocProvider.of<CharactersCubit>(context).getAllCharacters();
+    initCall();
+    //print(allCharacters.results?.first.name);
   }
 
   Widget buildBlocWidget() {
@@ -26,6 +58,7 @@ class _CharacterScreenState extends State<CharacterScreen> {
         builder: (context, state) {
       if (state is CharactersLoaded) {
         allCharacters = (state).characters;
+        print(allCharacters!.results?.first.name);
         return buildLoadedListWidgets();
       } else {
         return showLoadingIndicator();
@@ -65,10 +98,10 @@ class _CharacterScreenState extends State<CharacterScreen> {
       shrinkWrap: true,
       physics: const ClampingScrollPhysics(),
       padding: EdgeInsets.zero,
-      itemCount: allCharacters.length,
+      itemCount: allCharacters!.results?.length,
       itemBuilder: (ctx, index) {
         return CharacterItem(
-          character: allCharacters[index],
+          character: allCharacters!.results?[index],
         );
       },
     );
@@ -84,6 +117,7 @@ class _CharacterScreenState extends State<CharacterScreen> {
           style: TextStyle(color: MyColors.myGrey),
         ),
       ),
+      body: buildBlocWidget(),
     );
   }
 }
